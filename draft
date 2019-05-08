@@ -1,0 +1,65 @@
+function getMatchedCSSRules(element){
+	const matched=[],others=[];
+	if(element){
+		const d=element.ownerDocument,sheets=d.styleSheets;
+		if(0!==sheets.length){
+			const w=d.defaultView,matchMedia=w.matchMedia, CSSMediaRule=w.CSSMediaRule, CSSStyleRule=w.CSSStyleRule;
+
+			process=obj=>{
+				let rules=false;
+				try{
+					rules=obj.cssRules;
+				}catch(errore){
+					console.error(errore)
+				}finally{
+					if(false!==rules && 0!==rules.length){
+						const f=matchMedia;
+						for(const rule of rules){
+							if(rule instanceof CSSMediaRule){
+								if(f(rule.conditionText).matches){
+									process(rule)
+								}
+							}else{
+								if(rule instanceof CSSStyleRule){
+									if(element.matches(rule.selectorText)){
+										matched.push(rule)
+									}
+								}else{
+									others.push(rule)
+								}
+							}
+						}
+					}
+
+				}
+
+			};
+			//console.dir(sheets);
+			for(const sheet of sheets){
+				//console.dir(sheet);
+				if(true!==sheet.disabled){
+					const medias=sheet.media;
+					if(0!==medias.length){
+						for(const media of medias){
+							if(true!==matchMedia(media).matches){
+								medias.deleteMedium(media)
+							}
+						};
+						//console.dir(medias);
+						if(0!==medias.length){
+							process(sheet)
+						}
+					}else{
+						process(sheet)
+					}
+				}
+			};
+
+			console.dir(matched)
+
+		}
+	}
+}
+//
+console.clear();
+getMatchedCSSRules($0);
