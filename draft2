@@ -1,0 +1,79 @@
+this.getMatchedCSSRules=element=>{
+	if(element && 'style' in element){
+		const d=element.ownerDocument,sheets=d.styleSheets;
+		if(0!==sheets.length){
+			const w=d.defaultView,
+			matchMedia=w.matchMedia,
+			CSSRules=[
+				[],//0:UNKNOWN
+				[],//1:STYLE
+				[],//2:CHARSET
+				[],//3:IMPORT @import
+				[],//4:MEDIA
+				[],//5:FONT_FACE
+				[],//6:PAGE
+				[],//7:KEYFRAMES, corresponds to the contains of a *whole* @keyframes at-rule.
+				[],//8:KEYFRAME, corresponds to the contains of a single keyframe
+				[],//9://Reserved for future use
+				[],//10:NAMESPACE
+				[],//11:COUNTER_STYLE
+				[],//12:SUPPORTS
+				[],//13:DOCUMENT
+				[],//14:FONT_FEATURE_VALUES
+				[],//15:VIEWPORT
+				[],//16:REGION_STYLE
+			],loopRules=obj=>{
+				let rules=false;
+				try{
+					rules=obj.cssRules;
+				}catch(exception){
+					console.error(exception);
+					//console.dir(obj)
+					console.info(obj.href)
+				}finally{
+					if(false!==rules){
+						for(const rule of rules){
+							const i=rule.type
+							if(rule instanceof CSSMediaRule){
+								if(f(rule.conditionText).matches){
+									process(rule)
+								}
+							}else{
+								if(rule instanceof CSSStyleRule){
+									if(element.matches(rule.selectorText)){
+										matched.push(rule)
+									}
+								}else{
+									others.push(rule)
+								}
+							}
+
+
+							CSSRules[rule.type].push(rule)
+							console.info()
+						}
+					}
+				}
+			};
+			for(const sheet of sheets){
+				if(true!==sheet.disabled){
+					const medias=sheet.media;
+					if(0!==medias.length){
+						for(const media of medias){
+							if(matchMedia(media).matches){
+								loopRules(sheet);
+								break
+							}
+						}
+					}else{
+						loopRules(sheet)
+					}
+				}
+			}
+		}
+	}
+};
+//#
+console.clear();
+//$0
+this.getMatchedCSSRules(document.body);
