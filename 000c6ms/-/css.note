@@ -1,0 +1,36 @@
+Nested at-rules:
+4:MEDIA|6:PAGE|12:SUPPORTS|13:DOCUMENT|14:FONT_FEATURE_VALUES
+
+@media
+@supports
+
+	@supports (display: flex) {
+	  @media screen and (min-width: 900px) {
+		 article {
+			display: flex;
+		 }
+	  }
+	}
+
+
+@document
+
+	@document url("https://www.example.com/") {
+	  h1 {
+		 color: green;
+	  }
+	}
+
+
+@page
+	@page :first {
+	  margin: 2cm;
+	}
+
+
+@font-feature-values
+	@font-feature-values Font One {
+	  @styleset {
+		 nice-style: 12;
+	  }
+	}
